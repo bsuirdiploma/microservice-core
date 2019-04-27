@@ -4,7 +4,6 @@ import by.trusevich.house.core.exception.EntityNoContentException
 import by.trusevich.house.core.exception.EntityNotFoundException
 import by.trusevich.house.core.model.BaseEntity
 import by.trusevich.house.core.repository.BaseRepository
-import by.trusevich.house.core.util.merge
 import org.springframework.core.GenericTypeResolver.resolveTypeArguments
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest.of
@@ -22,10 +21,16 @@ abstract class AbstractCrudService<T : BaseEntity>(private val repository: BaseR
         )!![0].kotlin as KClass<T>
     }
 
-    fun create(model: T): T = repository.save(model)
+    open fun create(model: T): T = repository.save(model)
 
-    fun update(id: Long, model: T): T = repository.findByIdOrNull(id)?.let {
-        repository.save(model.merge(it, entityClass))
+    fun update(modelId: Long, model: T): T = repository.findByIdOrNull(modelId)?.let {
+
+        repository.save(model.apply {
+            id = it.id
+            created = it.created
+            updatedBy = it.updatedBy
+            updated = it.updated
+        })
     } ?: throw EntityNotFoundException()
 
     fun find(id: Long) = repository.findByIdOrNull(id) ?: throw EntityNoContentException()
