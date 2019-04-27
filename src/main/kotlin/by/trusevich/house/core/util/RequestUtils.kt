@@ -8,7 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes
 
 const val USER_PRINCIPAL = "userPrincipal"
 
-const val IDENTITY_HEADER = "identity"
+const val TOKEN_HEADER = "token"
 
 @Suppress("UNCHECKED_CAST")
 fun <T>getHttpRequestAttribute(attributeName: String) =
