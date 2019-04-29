@@ -35,7 +35,7 @@ abstract class AbstractCrudService<T : BaseEntity>(private val repository: BaseR
 
     fun find(id: Long) = repository.findByIdOrNull(id) ?: throw EntityNoContentException()
 
-    fun delete(id: Long) = repository.deleteById(id)
+    open fun delete(id: Long) = repository.deleteById(id)
 
     fun findAll(page: Int, limit: Int): Page<T> = repository.findAll(of(page, limit))
 
