@@ -14,30 +14,24 @@ import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RequestMethod.DELETE
-import org.springframework.web.bind.annotation.RequestMethod.GET
-import org.springframework.web.bind.annotation.RequestMethod.PATCH
-import org.springframework.web.bind.annotation.RequestMethod.POST
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"], methods = [GET, POST, DELETE, PATCH])
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(EmptyResultDataAccessException::class, EntityNotFoundException::class)
     fun handleNotFound(ex: Exception) = toResponse(ex, NOT_FOUND)
 
     @ExceptionHandler
-    fun handle(ex: EntityNoContentException) = toResponse(ex, NO_CONTENT)
+    fun handleNoContent(ex: EntityNoContentException) = toResponse(ex, NO_CONTENT)
 
     @ExceptionHandler
-    fun handle(ex: UnauthorizedException) = toResponse(ex, UNAUTHORIZED)
+    fun handleUnauthorized(ex: UnauthorizedException) = toResponse(ex, UNAUTHORIZED)
 
     @ExceptionHandler
-    fun globalExceptionHandler(ex: Exception) = toResponse(ex, INTERNAL_SERVER_ERROR)
+    fun handleOtherExceptions(ex: Exception) = toResponse(ex, INTERNAL_SERVER_ERROR)
 
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException, headers: HttpHeaders, status: HttpStatus, request: WebRequest
